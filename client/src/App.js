@@ -33,12 +33,17 @@ class App extends Component {
         operation: null,
         equal: false,
       });
-    if (op === 'equal') {
+    else if (op === 'equal') 
       this.setState({
         display: arithmetic(operation, display, placeholder),
         equal: true,
       });
-    } else this.setState({ operation: op});
+    
+    else if (op === 'percent') 
+    this.setState({
+      display: display / 100
+    });
+    else this.setState({ operation: op});
   };
 
   render() {
