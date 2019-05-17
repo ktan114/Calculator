@@ -8,23 +8,37 @@ class App extends Component {
     super();
     this.state = {
       display: 0,
-      num1: null,
+      placeholder: 0,
       operation: null,
+      equal: false,
     };
   }
 
   clickNumber = num => {
-    const { display } = this.state;
-    const addOnNumber =
-      display === 0 ? num : parseInt(display.toString() + `${num}`);
-    this.setState({ display: addOnNumber });
+    const { display, operation, equal } = this.state;
+    if (operation) this.setState({ display: num, placeholder: num });
+    else {
+      const addOnNumber =
+        display === 0 ? num : parseInt(display.toString() + `${num}`);
+      this.setState({ display: addOnNumber });
+    }
   };
 
-  clickOperation = operation => {
-    const num1 = this.state.num1;
-    if (operation === 'percent')
-      this.setState({ display: num1 / 100, operation: 'percent' });
-    else this.setState({ operation: operation });
+  clickOperation = op => {
+    const { display, operation, placeholder } = this.state;
+    if (op === 'clear')
+      this.setState({
+        display: 0,
+        placeholder: 0,
+        operation: null,
+        equal: false,
+      });
+    if (op === 'equal') {
+      this.setState({
+        display: arithmetic(operation, display, placeholder),
+        equal: true,
+      });
+    } else this.setState({ operation: op});
   };
 
   render() {
@@ -46,13 +60,13 @@ class App extends Component {
           <button onClick={() => this.clickNumber(9)}>9</button>
         </div>
         <div>
-          <button>Clear</button>
+          <button onClick={() => this.clickOperation('clear')}>Clear</button>
           <button onClick={() => this.clickOperation('add')}>+</button>
           <button onClick={() => this.clickOperation('subtract')}>-</button>
           <button onClick={() => this.clickOperation('multiply')}>*</button>
           <button onClick={() => this.clickOperation('divide')}>/</button>
           <button onClick={() => this.clickOperation('percent')}>%</button>
-          <button onClick={() => this.clickOperation('add')}>=</button>
+          <button onClick={() => this.clickOperation('equal')}>=</button>
         </div>
       </div>
     );
